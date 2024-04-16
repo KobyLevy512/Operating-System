@@ -75,6 +75,8 @@ namespace GamingOS.Tasks
         public void Free()
         {
             Cosmos.Core.Memory.Heap.Free(Registers);
+            Cosmos.Core.Memory.Heap.Free(Memory);
+            Cosmos.Core.Memory.Heap.Free(Stack);
         }
     }
 }
