@@ -383,10 +383,15 @@ namespace GamingOS.Tasks
 
     public unsafe class Commands
     {
+        /// <summary>
+        /// The amount of the commands.
+        /// </summary>
+        private const int COMMANDS = 255;
+
         public delegate bool MakeCommand(BinaryReader reader);
 
         public TaskState State;
-        public MakeCommand[] MakeCommands = new MakeCommand[255];
+        public MakeCommand[] MakeCommands = new MakeCommand[COMMANDS];
         public string LastMsg;
         public Commands(TaskState state) 
         {

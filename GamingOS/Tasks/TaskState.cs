@@ -54,9 +54,11 @@ namespace GamingOS.Tasks
         }
         public Buffer Registers, Memory, Stack;
         public List<Type> Structs;
+
         //public Dictionary<string, object> Instances;
         Commands cmd;
-
+        private List<Buffer> allocationTable;
+        public ulong* EspPtr, EcpPtr;
         public TaskState(uint memorySize, uint stackSize)
         {
             Registers = new Buffer(186);
@@ -64,16 +66,34 @@ namespace GamingOS.Tasks
             Stack = new Buffer(stackSize);
 
             cmd = new Commands(this);
+            allocationTable = new List<Buffer>();
+            Structs = new List<Type>();
+
             byte* ptr = Registers.AsByte;
             ptr += 32;
-            *((ulong*)ptr) = 
+            EspPtr = (ulong*)ptr;
+            *EspPtr = 0;
+            ptr += 8;
+            EcpPtr = (ulong*)ptr;
+            *EcpPtr = 0;
         }
 
+        public uint Alloc(uint size)
+        {
+            Buffer b = new Buffer(size);
+            allocationTable.Add(b);
+            return b.Address;
+        }
         public void Free()
         {
             Registers.Free();
             Memory.Free();
             Stack.Free();
+            while(allocationTable.Count > 0)
+            {
+                allocationTable[0].Free();
+                allocationTable.RemoveAt(0);
+            }
         }
     }
 }
