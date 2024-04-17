@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
 namespace GamingOS.Tasks.CommandsImp
 {
@@ -12,7 +8,7 @@ namespace GamingOS.Tasks.CommandsImp
         {
             c.MakeCommands[1] = (r) =>
             {
-                byte* ptr = c.State.Registers;
+                byte* ptr = c.State.Registers.AsByte;
                 byte loc = r.ReadByte();
                 if (loc > 185)
                 {
@@ -25,7 +21,7 @@ namespace GamingOS.Tasks.CommandsImp
             };
             c.MakeCommands[2] = (r) =>
             {
-                byte* ptr = c.State.Registers;
+                byte* ptr = c.State.Registers.AsByte;
                 byte reg = r.ReadByte();
                 if (reg > 185)
                 {
@@ -34,17 +30,17 @@ namespace GamingOS.Tasks.CommandsImp
                 }
                 ptr += reg;
                 uint loc = r.ReadUInt32();
-                if (loc >= c.State.MemoryLength)
+                if (loc >= c.State.Memory.Size)
                 {
                     c.LastMsg = "Cannot access memory at address:" + loc;
                     return false;
                 }
-                *ptr = c.State.Memory[loc];
+                *ptr = c.State.Memory.AsByte[loc];
                 return true;
             };
             c.MakeCommands[3] = (r) =>
             {
-                byte* ptr = c.State.Registers;
+                byte* ptr = c.State.Registers.AsByte;
                 byte reg = r.ReadByte();
                 if (reg > 185)
                 {
@@ -63,35 +59,35 @@ namespace GamingOS.Tasks.CommandsImp
             c.MakeCommands[4] = (r) =>
             {
                 uint mem = r.ReadUInt32();
-                if (mem >= c.State.MemoryLength)
+                if (mem >= c.State.Memory.Size)
                 {
                     c.LastMsg = "Cannot access memory at address:" + mem;
                     return false;
                 }
-                c.State.Memory[mem] = r.ReadByte();
+                c.State.Memory.AsByte[mem] = r.ReadByte();
                 return true;
             };
             c.MakeCommands[5] = (r) =>
             {
                 uint mem = r.ReadUInt32();
-                if (mem >= c.State.MemoryLength)
+                if (mem >= c.State.Memory.Size)
                 {
                     c.LastMsg = "Cannot access memory at address:" + mem;
                     return false;
                 }
                 uint mem2 = r.ReadUInt32();
-                if (mem2 >= c.State.MemoryLength)
+                if (mem2 >= c.State.Memory.Size)
                 {
                     c.LastMsg = "Cannot access memory at address:" + mem2;
                     return false;
                 }
-                c.State.Memory[mem] = c.State.Memory[mem2];
+                c.State.Memory.AsByte[mem] = c.State.Memory.AsByte[mem2];
                 return true;
             };
             c.MakeCommands[6] = (r) =>
             {
                 uint mem = r.ReadUInt32();
-                if (mem >= c.State.MemoryLength)
+                if (mem >= c.State.Memory.Size)
                 {
                     c.LastMsg = "Cannot access memory at address:" + mem;
                     return false;
@@ -102,15 +98,15 @@ namespace GamingOS.Tasks.CommandsImp
                     c.LastMsg = "Can't determine that register " + reg;
                     return false;
                 }
-                byte* ptr = c.State.Registers;
+                byte* ptr = c.State.Registers.AsByte;
                 ptr += reg;
-                c.State.Memory[mem] = *ptr;
+                c.State.Memory.AsByte[mem] = *ptr;
                 return true;
             };
 
             c.MakeCommands[7] = (r) =>
             {
-                byte* ptr = c.State.Registers;
+                byte* ptr = c.State.Registers.AsByte;
                 byte loc = r.ReadByte();
                 if (loc > 185)
                 {
@@ -124,7 +120,7 @@ namespace GamingOS.Tasks.CommandsImp
             };
             c.MakeCommands[8] = (r) =>
             {
-                byte* ptr = c.State.Registers;
+                byte* ptr = c.State.Registers.AsByte;
                 byte reg = r.ReadByte();
                 if (reg > 185)
                 {
@@ -135,17 +131,17 @@ namespace GamingOS.Tasks.CommandsImp
                 ushort* shortPtr = (ushort*)ptr;
 
                 uint loc = r.ReadUInt32();
-                if (loc >= c.State.MemoryLength)
+                if (loc >= c.State.Memory.Size)
                 {
                     c.LastMsg = "Cannot access memory at address:" + loc;
                     return false;
                 }
-                *shortPtr = c.State.Memory[loc];
+                *shortPtr = c.State.Memory.AsByte[loc];
                 return true;
             };
             c.MakeCommands[9] = (r) =>
             {
-                byte* ptr = c.State.Registers;
+                byte* ptr = c.State.Registers.AsByte;
                 byte reg = r.ReadByte();
                 if (reg > 185)
                 {
@@ -167,38 +163,38 @@ namespace GamingOS.Tasks.CommandsImp
             c.MakeCommands[10] = (r) =>
             {
                 uint mem = r.ReadUInt32();
-                if (mem >= c.State.MemoryLength)
+                if (mem >= c.State.Memory.Size)
                 {
                     c.LastMsg = "Cannot access memory at address:" + mem;
                     return false;
                 }
-                ushort* ptr = (ushort*)(c.State.Memory + mem); 
+                ushort* ptr = (ushort*)(c.State.Memory.AsByte + mem); 
                 *ptr = r.ReadUInt16();
                 return true;
             };
             c.MakeCommands[11] = (r) =>
             {
                 uint mem = r.ReadUInt32();
-                if (mem >= c.State.MemoryLength)
+                if (mem >= c.State.Memory.Size)
                 {
                     c.LastMsg = "Cannot access memory at address:" + mem;
                     return false;
                 }
                 uint mem2 = r.ReadUInt32();
-                if (mem2 >= c.State.MemoryLength)
+                if (mem2 >= c.State.Memory.Size)
                 {
                     c.LastMsg = "Cannot access memory at address:" + mem2;
                     return false;
                 }
-                ushort* ptrDst = (ushort*)(c.State.Memory + mem);
-                ushort* ptrSrc = (ushort*)(c.State.Memory + mem2);
+                ushort* ptrDst = (ushort*)(c.State.Memory.AsByte + mem);
+                ushort* ptrSrc = (ushort*)(c.State.Memory.AsByte + mem2);
                 *ptrDst = *ptrSrc;
                 return true;
             };
             c.MakeCommands[12] = (r) =>
             {
                 uint mem = r.ReadUInt32();
-                if (mem >= c.State.MemoryLength)
+                if (mem >= c.State.Memory.Size)
                 {
                     c.LastMsg = "Cannot access memory at address:" + mem;
                     return false;
@@ -209,8 +205,8 @@ namespace GamingOS.Tasks.CommandsImp
                     c.LastMsg = "Can't determine that register " + reg;
                     return false;
                 }
-                ushort* ptr = (ushort*)(c.State.Registers + reg);
-                ushort* ptr2 = (ushort*)(c.State.Memory + mem);
+                ushort* ptr = (ushort*)(c.State.Registers.AsByte + reg);
+                ushort* ptr2 = (ushort*)(c.State.Memory.AsByte + mem);
                 
                 *ptr2 = *ptr;
                 return true;

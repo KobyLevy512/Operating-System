@@ -52,31 +52,28 @@ namespace GamingOS.Tasks
             XMM8,
             XMM9,
         }
-        public byte* Registers;
-        public byte* Memory;
-        public byte* Stack;
-        public uint MemoryLength;
-        public uint StackLength;
+        public Buffer Registers, Memory, Stack;
         public List<Type> Structs;
-        public Dictionary<string, object> Instances;
+        //public Dictionary<string, object> Instances;
         Commands cmd;
 
         public TaskState(uint memorySize, uint stackSize)
         {
-            Registers = Cosmos.Core.Memory.Heap.Alloc(186);
+            Registers = new Buffer(186);
+            Memory = new Buffer(memorySize);
+            Stack = new Buffer(stackSize);
 
-            MemoryLength = memorySize;
-            Memory = Cosmos.Core.Memory.Heap.Alloc(memorySize);
-
-            StackLength = stackSize;
-            Stack = Cosmos.Core.Memory.Heap.Alloc(stackSize);
+            cmd = new Commands(this);
+            byte* ptr = Registers.AsByte;
+            ptr += 32;
+            *((ulong*)ptr) = 
         }
 
         public void Free()
         {
-            Cosmos.Core.Memory.Heap.Free(Registers);
-            Cosmos.Core.Memory.Heap.Free(Memory);
-            Cosmos.Core.Memory.Heap.Free(Stack);
+            Registers.Free();
+            Memory.Free();
+            Stack.Free();
         }
     }
 }
