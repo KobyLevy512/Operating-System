@@ -4,6 +4,7 @@ using GamingOS.Resources;
 using GamingOS.Styles;
 using GamingOS.Tasks;
 using System.Collections.Generic;
+using System.IO;
 using Sys = Cosmos.System;
 
 namespace GamingOS
@@ -27,6 +28,28 @@ namespace GamingOS
             Sys.MouseManager.ScreenHeight = 1080 - ResourceManager.CursorBitmap.Height;
             Sys.MouseManager.X = 1920 / 2;
             Sys.MouseManager.Y = 1080 / 2;
+
+            //Test binary file
+            byte[] binFile = new byte[33];
+            BinaryWriter b = new BinaryWriter(new MemoryStream(binFile));
+            b.Write('c');
+            b.Write('o');
+            b.Write('m');
+            b.Write('p');
+            b.Write('a');
+            b.Write('n');
+            b.Write('i');
+            b.Write(new byte[13]);
+            b.Write('c');
+            b.Write(new byte[19]);
+            b.Write((byte)255);
+            b.Write(4u);
+            b.Write(1024u);
+            b.Write(0);
+            b.Write(0);
+            b.Write(100);
+            b.Close();
+            Task tmp = new Task(binFile);
         }
 
         protected override void Run()

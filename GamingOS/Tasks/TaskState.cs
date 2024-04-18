@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace GamingOS.Tasks
 {
@@ -38,8 +39,8 @@ namespace GamingOS.Tasks
             R2,
             R3,
             R4,
-            R5, 
-            R6, 
+            R5,
+            R6,
             R7,
             XMM0,
             XMM1,
@@ -52,9 +53,11 @@ namespace GamingOS.Tasks
             XMM8,
             XMM9,
         }
+        public delegate void RuntimeError(string reason);
+
         public Buffer Registers, Memory, Stack;
         public List<Type> Structs;
-
+        public event RuntimeError OnRuntimeError;
         //public Dictionary<string, object> Instances;
         Commands cmd;
         private List<Buffer> allocationTable;
@@ -78,11 +81,30 @@ namespace GamingOS.Tasks
             *EcpPtr = 0;
         }
 
+        public void ExecuteCommand(BinaryReader reader)
+        {
+            if (!cmd.MakeCommands[reader.ReadByte()](reader))
+            {
+                OnRuntimeError?.Invoke(cmd.LastMsg);
+            }
+        }
         public uint Alloc(uint size)
         {
             Buffer b = new Buffer(size);
             allocationTable.Add(b);
             return b.Address;
+        }
+
+        public void FreeAlloc(uint address)
+        {
+            for(int i = 0; i < allocationTable.Count; i++)
+            {
+                if (allocationTable[i].Address == address)
+                {
+                    allocationTable[i].Free();
+                    allocationTable.RemoveAt(i);
+                }
+            }
         }
         public void Free()
         {
