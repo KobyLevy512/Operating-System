@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using GamingOS.Utils;
+using Buffer = GamingOS.Utils.Buffer;
 
 namespace GamingOS.Tasks
 {
@@ -53,11 +55,10 @@ namespace GamingOS.Tasks
             XMM8,
             XMM9,
         }
-        public delegate void RuntimeError(string reason);
 
         public Buffer Registers, Memory, Stack;
         public List<Type> Structs;
-        public event RuntimeError OnRuntimeError;
+
         //public Dictionary<string, object> Instances;
         Commands cmd;
         private List<Buffer> allocationTable;
@@ -81,12 +82,17 @@ namespace GamingOS.Tasks
             *EcpPtr = 0;
         }
 
-        public void ExecuteCommand(BinaryReader reader)
+        public bool ExecuteCommand(BinaryReader reader)
         {
             if (!cmd.MakeCommands[reader.ReadByte()](reader))
             {
-                OnRuntimeError?.Invoke(cmd.LastMsg);
+                if(cmd.LastMsg != "s")
+                {
+                    return false;
+                }
+                return false;
             }
+            return true;
         }
         public uint Alloc(uint size)
         {

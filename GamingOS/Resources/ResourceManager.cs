@@ -8,6 +8,9 @@ namespace GamingOS.Resources
         [ManifestResourceStream(ResourceName = "GamingOS.Resources.Cursor.bmp")]
         public static byte[] Cursor;
 
+        [ManifestResourceStream(ResourceName = "GamingOS.Resources.arial.ttf")]
+        public static byte[] ArialFont;
+
         public static Bitmap CursorBitmap = new Bitmap(Cursor);
     }
 }

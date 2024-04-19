@@ -397,7 +397,7 @@ namespace GamingOS.Tasks
         {
             this.State = state;
             //nop
-            MakeCommands[0] = (r) => { return true; };
+            MakeCommands[0] = (r) => { LastMsg = "s"; return true; };
 
             //mov
             new CommandsImp.Mov(this);

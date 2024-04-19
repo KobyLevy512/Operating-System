@@ -24,10 +24,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="Resources\arial.ttf" />
       <None Remove="Resources\Cursor.bmp" />
     </ItemGroup>
 
     <ItemGroup>
+      <EmbeddedResource Include="Resources\arial.ttf" />
       <EmbeddedResource Include="Resources\Cursor.bmp" />
     </ItemGroup>
 

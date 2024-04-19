@@ -2,7 +2,7 @@
 using Cosmos.System.Network.IPv4;
 using System;
 
-namespace GamingOS.Tasks
+namespace GamingOS.Utils
 {
     public unsafe class Buffer
     {
@@ -22,11 +22,11 @@ namespace GamingOS.Tasks
 
         public ushort* AsShort
         {
-            get=>(ushort*)Data;
+            get => (ushort*)Data;
         }
         public uint* AsUInt
         {
-            get=>(uint*)Data;
+            get => (uint*)Data;
         }
         public ulong* AsULong
         {
@@ -34,7 +34,7 @@ namespace GamingOS.Tasks
         }
         public float* AsFloat
         {
-            get=>(float*)Data;
+            get => (float*)Data;
         }
         public double* AsDouble
         {

@@ -7,10 +7,10 @@ namespace GamingOS.Tasks
     //Header
     //Company Name(20) : char offset - 0
     //Task Name(20) : char offset - 20
-    //Priority: byte offset - 21
-    //IsBackground: byte offset -22
-    //MemorySize: uint offset -23
-    //StackSize: uint offset -27
+    //Priority: byte offset - 41
+    //IsBackground: byte offset -42
+    //MemorySize: uint offset -43
+    //StackSize: uint offset -47
     public class Task
     {
         public uint Priority;
@@ -18,7 +18,7 @@ namespace GamingOS.Tasks
         public string Name;
         public bool IsMinimize;
         public bool BackgroundTask;
-        TaskState state;
+        public TaskState State;
         BinaryReader reader;
         public Task(byte[] opcodes)
         {
@@ -31,12 +31,7 @@ namespace GamingOS.Tasks
                 BackgroundTask = read.ReadByte() != 0;
                 uint memSize = read.ReadUInt32();
                 uint stackSize = read.ReadUInt32();
-                state = new TaskState(memSize, stackSize);
-                state.OnRuntimeError += (msg) =>
-                {
-                    //Show alert.
-                    Globals.Tasks.Remove(this);
-                };
+                State = new TaskState(memSize, stackSize);
                 read.Close();
                 MemoryStream newStream = new MemoryStream(opcodes, 31,opcodes.Length - 31, false);
                 reader = new BinaryReader(newStream);
@@ -52,7 +47,12 @@ namespace GamingOS.Tasks
         {
             for (int i = 0; i < Priority; i++)
             {
-                state.ExecuteCommand(reader);
+                if(reader.BaseStream.Position >= reader.BaseStream.Length - 1)
+                {
+                    Globals.Tasks.Remove(this);
+                    break;
+                }
+                if (!State.ExecuteCommand(reader)) break;
             }
         }
     }

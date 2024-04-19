@@ -1,8 +1,11 @@
 ﻿using Cosmos.System.FileSystem;
 using Cosmos.System.Graphics;
+using GamingOS.Events;
+using GamingOS.Programs;
 using GamingOS.Styles;
 using GamingOS.Tasks;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace GamingOS
 {
@@ -13,6 +16,8 @@ namespace GamingOS
         public static VBECanvas Canvas;
         public static CosmosVFS Drive;
         public static List<Task> Tasks;
+        public static Debbuger Debug;
+        public static EventsHandler Events;
 
         /// <summary>
         /// Initialize all the globals
@@ -21,13 +26,15 @@ namespace GamingOS
         /// <param name="style"></param>
         /// <param name="canvas"></param>
         /// <param name="drive"></param>
-        public static void Initialize(Kernel kernel, Style style, VBECanvas canvas, CosmosVFS drive)
+        public static void Initialize(Kernel kernel, Style style, VBECanvas canvas)
         {
             Kernal = kernel;
             Style = style;
             Canvas = canvas;
-            Drive = drive;
+            Drive = new CosmosVFS();
             Tasks = new List<Task>();
+            Debug = new Debbuger();
+            Events = new EventsHandler();
 
             Cosmos.System.FileSystem.VFS.VFSManager.RegisterVFS(Drive);
         }

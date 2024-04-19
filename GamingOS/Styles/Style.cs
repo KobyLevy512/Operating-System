@@ -1,4 +1,7 @@
 ﻿
+using Cosmos.System.Graphics.Fonts;
+using Cosmos.System.Graphics;
+using GamingOS.Resources;
 using System;
 using System.Drawing;
 
@@ -16,24 +19,23 @@ namespace GamingOS.Styles
             Yellow = 64
         }
 
-        public Color Primary, PrimaryLight, PrimaryDark;
-        public Color Secondry, SecondryLight, SecondryDark;
-        public Color Background, Foreground;
-
-        private Color ColorFromHex(uint value)
+        public Pen Primary, PrimaryLight, PrimaryDark;
+        public Pen Secondry, SecondryLight, SecondryDark;
+        public Pen Background, Foreground;
+        public Font Font;
+        private Pen ColorFromHex(uint value)
         {
-            return Color.FromArgb((int)((value >> 24) & 255), (int)((value >> 16) & 255), (int)((value >> 8) & 255), (int)(value & 255));
+            return new Pen(Color.FromArgb((int)((value >> 24) & 255), (int)((value >> 16) & 255), (int)((value >> 8) & 255), (int)(value & 255)));
         }
 
-        private Color AddBright(Color src, float light)
+        private Pen AddBright(Color src, float light)
         {
-            return Color.FromArgb(src.A, (int)(src.R * light), (int)(src.G * light), (int)(src.B * light));
+            return new Pen(Color.FromArgb(src.A, (int)(src.R * light), (int)(src.G * light), (int)(src.B * light)));
         }
         public Style(StyleType type)
         {
-            _style = this;
             byte t = (byte)type;
-
+            Font = PCScreenFont.Default;
             //Blue
             if ((t & 4) != 0)
             {
@@ -71,11 +73,11 @@ namespace GamingOS.Styles
 
                 Primary = ColorFromHex(0xFF77B0AA);
                 PrimaryDark = ColorFromHex(0xFF135D66);
-                PrimaryLight = AddBright(Primary, 1.2f);
+                PrimaryLight = AddBright(Primary.Color, 1.2f);
 
                 Secondry = ColorFromHex(0xFFBF3131);
                 SecondryDark = ColorFromHex(0xFF7D0A0A);
-                SecondryLight = AddBright(Secondry , 1.2f);
+                SecondryLight = AddBright(Secondry.Color, 1.2f);
             }
             //Green
             else if ((t & 32) != 0)
@@ -113,7 +115,7 @@ namespace GamingOS.Styles
             //Check if is this dark mode
             if((t & 2) != 0)
             {
-                Color tmp = Foreground;
+                Pen tmp = Foreground;
                 Foreground = Background;
                 Background = tmp;
             }
