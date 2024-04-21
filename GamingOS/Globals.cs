@@ -5,7 +5,6 @@ using GamingOS.Programs;
 using GamingOS.Styles;
 using GamingOS.Tasks;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace GamingOS
 {
@@ -16,7 +15,7 @@ namespace GamingOS
         public static VBECanvas Canvas;
         public static CosmosVFS Drive;
         public static List<Task> Tasks;
-        public static Debbuger Debug;
+        public static List<SystemProgram> SystemPrograms;
         public static EventsHandler Events;
 
         /// <summary>
@@ -33,9 +32,9 @@ namespace GamingOS
             Canvas = canvas;
             Drive = new CosmosVFS();
             Tasks = new List<Task>();
-            Debug = new Debbuger();
             Events = new EventsHandler();
-
+            SystemPrograms = new List<SystemProgram>();
+            
             Cosmos.System.FileSystem.VFS.VFSManager.RegisterVFS(Drive);
         }
     }

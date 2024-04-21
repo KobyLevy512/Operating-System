@@ -1,14 +1,12 @@
 ﻿
 using Cosmos.System;
+using GamingOS.Utils;
 
 namespace GamingOS.Events
 {
     public interface IEventable
     {
-        public int X { get; set; }
-        public int Y { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
+        public Location Location { get; set; }
         public bool MouseInside {  get; set; }
         public bool IsFocus {  get; set; }
         public void OnMouseEnter(int x, int y, MouseState state);

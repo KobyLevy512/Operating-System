@@ -1,12 +1,8 @@
 ﻿using Cosmos.Core.Memory;
 using Cosmos.System.Graphics;
+using GamingOS.Programs;
 using GamingOS.Resources;
 using GamingOS.Styles;
-using GamingOS.Tasks;
-using GamingOS.Utils;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using Sys = Cosmos.System;
 
 namespace GamingOS
@@ -20,8 +16,10 @@ namespace GamingOS
             (
                 this,
                 new Style(Style.StyleType.Green),
-                new Sys.Graphics.VBECanvas(new Sys.Graphics.Mode(1920, 1080, Sys.Graphics.ColorDepth.ColorDepth32))
+                new VBECanvas(new Mode(1920, 1080, ColorDepth.ColorDepth32))
             );
+
+            Globals.SystemPrograms.Add(new Inspector(1920, 1080));
 
             //Initialize mouse coordinates and size.
             Sys.MouseManager.ScreenWidth = 1920 - ResourceManager.CursorBitmap.Width;
@@ -33,31 +31,32 @@ namespace GamingOS
 
         protected override void Run()
         {
-            //get reference to the globals
-            VBECanvas canvas = Globals.Canvas;
-            Style style = Globals.Style;
-            List<Task> tasks = Globals.Tasks;
-
             //Clear the background
-            canvas.Clear(style.Background.Color);
+            Globals.Canvas.Clear(Globals.Style.Background.Color);
 
-            //Update all the tasks
-            for (int i = 0; i < tasks.Count; i++)
+            //Dispatch all the system events.
+            Globals.Events.Dispatch();
+
+            //Render all the system programs.
+            foreach(SystemProgram program in Globals.SystemPrograms)
             {
-                tasks[i].Execute();
+                program.Render();
             }
 
-            //Draw the debugger
-            Globals.Debug.Execute();
+            //Update all the tasks
+            for (int i = 0; i < Globals.Tasks.Count; i++)
+            {
+                Globals.Tasks[i].Execute();
+            }
 
             //Draw the mouse
-            canvas.DrawImageAlpha(ResourceManager.CursorBitmap, (int)Sys.MouseManager.X, (int)Sys.MouseManager.Y);
+            Globals.Canvas.DrawImageAlpha(ResourceManager.CursorBitmap, (int)Sys.MouseManager.X, (int)Sys.MouseManager.Y);
 
             //Collect unrefence object for the garbage collector.
             Heap.Collect();
 
             //Render the graphics to the screen.
-            canvas.Display();
+            Globals.Canvas.Display();
         }
     }
 }
